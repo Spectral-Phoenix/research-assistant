@@ -3,9 +3,10 @@ import time
 
 from dotenv import load_dotenv
 from langchain_community.llms import Cohere
-from langchain_community.tools import DuckDuckGoSearchResults
-from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from langchain_google_genai import ChatGoogleGenerativeAI
+
+from scrape import scrape_text
+from search import web_search
 
 load_dotenv()
 
@@ -21,17 +22,8 @@ llm1 = Cohere(model="command-nightly",
                 max_tokens=4096,
                 temperature=0.5,)
 
-def search(user_query):
-    wrapper = DuckDuckGoSearchAPIWrapper(region="en-us",safesearch='off', time="d", max_results=10)
- 
-    search = DuckDuckGoSearchResults(api_wrapper=wrapper, source="news")
- 
-    text = search.run(user_query)
-
-    return text
-
-def summarise(user_query,web_search):
-    prompt_template = f"Answer the following question based on the context provided.\nQuestion: {user_query}\nContext:\n{web_search}"
+def summarise(user_query,text):
+    prompt_template = f"Provide a detailed response to the following question based on the context provided.\nQuestion: {user_query}\nContext:\n{text}"
 
     result = llm1.invoke(prompt_template)
 
@@ -41,11 +33,13 @@ user_query = input("Enter the Query: ")
 
 start_time = time.time()
 
-web_search = search(user_query)
-
+# Search the Web and Collect Links
+links = web_search(user_query)
 print("Web Search Completed!")
 
-answer = summarise(user_query, web_search)
+# Scrape the Text from the Links
+text = scrape_text(links)
+answer = summarise(user_query, text)
 
 end_time = time.time()
 elapsed_time = "{:.2f}".format(end_time - start_time)
