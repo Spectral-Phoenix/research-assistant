@@ -1,0 +1,5 @@
+.idx
+.venv
+.vscode
+.env
+main.ipynb
