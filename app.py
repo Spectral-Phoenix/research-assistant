@@ -5,7 +5,6 @@ from src.scrape import scrape
 from src.search import quick_web_search, deep_web_search
 from src.summarise import summarise
 
-st.title("Research Assistant")
 user_query = st.text_input("Enter the Query: ")
 
 if st.button("Search"):
@@ -16,9 +15,9 @@ if st.button("Search"):
     links = quick_web_search(user_query)
     st.info("Web Search Completed!")
 
-# Scrape the Text from the Links
-text = scrape_text(links)
-answer = summarise(user_query, text)
+    # Scrape the Text from the Links
+    text = scrape(links)
+    answer = summarise(user_query, text)
 
     end_time = time.time()
     elapsed_time = "{:.2f}".format(end_time - start_time)
