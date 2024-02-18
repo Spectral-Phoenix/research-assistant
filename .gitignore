@@ -3,3 +3,4 @@
 .vscode
 .env
 main.ipynb
+__pycache__

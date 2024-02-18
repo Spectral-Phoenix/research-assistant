@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def scrape_text(links: list[str]):
     """Extracts text from a list of links, appends them, and returns the combined text.
 
