@@ -4,13 +4,13 @@ import sys
 import streamlit as st
 
 import requests
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 sys.path.append(os.path.abspath("src"))
 
 from models import llm, llm1
 
-load_dotenv()
+#load_dotenv()
 
 def quick_web_search(user_query):
     """
