@@ -1,4 +1,5 @@
 import os
+import streamlit as st
 
 from dotenv import load_dotenv
 from langchain_community.llms import Cohere
@@ -6,8 +7,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
-api_key = os.environ["GEMINI_API_KEY"]
-api_key_1 = os.environ["COHERE_API_KEY"]
+api_key = st.secrets["GEMINI_API_KEY"]
+api_key_1 = st.secrets["COHERE_API_KEY"]
 
 llm = ChatGoogleGenerativeAI(model="gemini-pro",
                                 google_api_key=api_key,

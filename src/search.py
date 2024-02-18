@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import streamlit as st
 
 import requests
 from dotenv import load_dotenv
@@ -33,7 +34,7 @@ def quick_web_search(user_query):
 
     # Set up the request headers with the API key
     headers = {
-        'X-API-KEY': os.environ["SERPER_API_KEY"],
+        'X-API-KEY': st.secrets["SERPER_API_KEY"],
         'Content-Type': 'application/json'
     }
 
