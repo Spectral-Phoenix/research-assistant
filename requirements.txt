@@ -3,3 +3,4 @@ langchain-google-genai
 Pillow
 bs4
 requests
+streamlit
