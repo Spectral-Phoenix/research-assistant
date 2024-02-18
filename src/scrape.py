@@ -2,30 +2,38 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape_text(links: list[str]):
-    """Extracts text from a list of links, appends them, and returns the combined text.
-
-    Args:
-        links (list[str]): A list of URLs to scrape text from.
-
-    Returns:
-        str: The combined text extracted from all links, or an error message if any.
-    """
-
-    scraped_text = ""
-
+def scrape_text(links):
+    content_list = []
     for link in links:
-        try:
-            response = requests.get(link)
+        session = requests.Session()
+        response = session.get(link, timeout=4)
+        soup = BeautifulSoup(response.content, 'lxml', from_encoding=response.encoding)
+        for script_or_style in soup(["script", "style"]):
+            script_or_style.extract()
+        raw_content = get_content_from_url(soup)
+        lines = (line.strip() for line in raw_content.splitlines())
+        chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+        content = "\n".join(chunk for chunk in chunks if chunk)
+        content_list.append(content)
+    return content_list
 
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, "lxml")
-                page_text = soup.get_text(separator=" ", strip=True)[:5000]
-                scraped_text += page_text + "\n"  # Append with newline for clarity
-            else:
-                scraped_text += f"Failed to retrieve '{link}': Status Code {response.status_code}\n"
 
-        except Exception as e:
-            scraped_text += f"Failed to retrieve '{link}': {e}\n"
+def get_content_from_url(soup):
+    """Get the text from the soup
+    Args:
+        soup (BeautifulSoup): The soup to get the text from
+    Returns:
+        str: The text from the soup
+    """
+    text = ""
+    tags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5']
+    for element in soup.find_all(tags):  # Find all the <p> elements
+        text += element.text + "\n"
+    return text
 
-    return scraped_text.strip()  # Remove any leading/trailing whitespace
+  # Replace with your list of links
+
+def scrape(links):
+    content_list = scrape_text(links)
+    for content in content_list:
+        return content

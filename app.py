@@ -1,10 +1,11 @@
 import time
 import streamlit as st
 
-from src.scrape import scrape_text
+from src.scrape import scrape
 from src.search import quick_web_search, deep_web_search
 from src.summarise import summarise
 
+st.title("Research Assistant")
 user_query = st.text_input("Enter the Query: ")
 
 start_time = time.time()
@@ -14,7 +15,7 @@ links = quick_web_search(user_query)
 st.info("Web Search Completed!")
 
 # Scrape the Text from the Links
-text = scrape_text(links)
+text = scrape(links)
 answer = summarise(user_query, text)
 
 end_time = time.time()
